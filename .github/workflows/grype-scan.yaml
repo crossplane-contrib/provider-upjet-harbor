@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Get Latest Release
@@ -46,7 +46,7 @@ jobs:
 
       - name: Scan Latest Release Image
         run: |
-          ${{ steps.grype-install.outputs.cmd }} ghcr.io/jonasz-lasut/provider-upjet-harbor:${{ steps.release.outputs.tag }} \
+          ${{ steps.grype-install.outputs.cmd }} ghcr.io/crossplane-contrib/provider-upjet-harbor:${{ steps.release.outputs.tag }} \
             -o table \
             -o sarif=grype-results.sarif
 

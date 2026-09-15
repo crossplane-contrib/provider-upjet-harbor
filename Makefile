@@ -2,7 +2,7 @@
 # Setup Project
 
 PROJECT_NAME ?= provider-upjet-harbor
-PROJECT_REPO ?= github.com/jonasz-lasut/$(PROJECT_NAME)
+PROJECT_REPO ?= github.com/crossplane-contrib/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION ?= 1.5.7
 

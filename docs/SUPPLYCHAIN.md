@@ -9,8 +9,8 @@ the workflow that produced the release.
 
 Both the primary image and its Upbound mirror are signed:
 
-- `ghcr.io/jonasz-lasut/provider-upjet-harbor:<version>`
-- `xpkg.upbound.io/jonasz-lasut/provider-upjet-harbor:<version>`
+- `ghcr.io/crossplane-contrib/provider-upjet-harbor:<version>`
+- `xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor:<version>`
 
 ## Attestations
 
@@ -34,28 +34,28 @@ run doesn't pass:
 
 ```console
 cosign verify \
-  --certificate-identity https://github.com/jonasz-lasut/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
+  --certificate-identity https://github.com/crossplane-contrib/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/jonasz-lasut/provider-upjet-harbor:<version>
+  ghcr.io/crossplane-contrib/provider-upjet-harbor:<version>
 ```
 
 Verify each attestation the same way, adding `--type`:
 
 ```console
 cosign verify-attestation \
-  --certificate-identity https://github.com/jonasz-lasut/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
+  --certificate-identity https://github.com/crossplane-contrib/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --type spdxjson \
-  ghcr.io/jonasz-lasut/provider-upjet-harbor:<version>
+  ghcr.io/crossplane-contrib/provider-upjet-harbor:<version>
 
 cosign verify-attestation \
-  --certificate-identity https://github.com/jonasz-lasut/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
+  --certificate-identity https://github.com/crossplane-contrib/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --type slsaprovenance1 \
-  ghcr.io/jonasz-lasut/provider-upjet-harbor:<version>
+  ghcr.io/crossplane-contrib/provider-upjet-harbor:<version>
 ```
 
-Swap in `xpkg.upbound.io/jonasz-lasut/provider-upjet-harbor:<version>` to check the Upbound mirror
+Swap in `xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor:<version>` to check the Upbound mirror
 instead — same identity, since both images are signed and attested by the same workflow.
 
 On success, `cosign verify`/`cosign verify-attestation` print the matching Rekor entries and exit
@@ -80,7 +80,7 @@ metadata:
 spec:
   matchImages:
     - type: Prefix
-      prefix: ghcr.io/jonasz-lasut/provider-upjet-harbor
+      prefix: ghcr.io/crossplane-contrib/provider-upjet-harbor
   verification:
     provider: Cosign
     cosign:
@@ -89,7 +89,7 @@ spec:
           keyless:
             identities:
               - issuer: https://token.actions.githubusercontent.com
-                subject: https://github.com/jonasz-lasut/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main
+                subject: https://github.com/crossplane-contrib/provider-upjet-harbor/.github/workflows/supplychain.yaml@refs/heads/main
           attestations:
             - name: sbom
               predicateType: spdxjson
@@ -102,7 +102,7 @@ currently only checks that a validly-signed attestation of the given predicate t
 doesn't evaluate the attestation's contents against a policy.
 
 To also verify the Upbound mirror, add a second `matchImages` entry (or a separate `ImageConfig`)
-with `prefix: xpkg.upbound.io/jonasz-lasut/provider-upjet-harbor` — the `verification` block is
+with `prefix: xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor` — the `verification` block is
 identical, since both images are signed and attested by the same workflow identity.
 
 Once applied, Crossplane reports the verification result as a `Verified` condition on the

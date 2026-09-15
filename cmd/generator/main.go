@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package main
@@ -12,7 +12,7 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/pipeline"
 	harborprovider "github.com/goharbor/terraform-provider-harbor/provider"
 
-	"github.com/jonasz-lasut/provider-upjet-harbor/config"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config"
 )
 
 func main() {

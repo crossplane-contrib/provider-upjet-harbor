@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package clients
@@ -8,7 +8,7 @@ import (
 
 	"k8s.io/utils/ptr"
 
-	namespacedv1beta1 "github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/v1beta1"
+	namespacedv1beta1 "github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/v1beta1"
 )
 
 var (

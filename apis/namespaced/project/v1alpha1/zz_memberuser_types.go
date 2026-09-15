@@ -16,7 +16,7 @@ import (
 type MemberUserInitParameters struct {
 
 	// (String) The project id of the project that the entity will have access to.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("id",true)
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
 
@@ -32,7 +32,7 @@ type MemberUserInitParameters struct {
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
 	// (String) The name of the member entity.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.User
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.User
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("username",true)
 	UserName *string `json:"userName,omitempty" tf:"user_name,omitempty"`
 
@@ -66,7 +66,7 @@ type MemberUserObservation struct {
 type MemberUserParameters struct {
 
 	// (String) The project id of the project that the entity will have access to.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("id",true)
 	// +kubebuilder:validation:Optional
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
@@ -84,7 +84,7 @@ type MemberUserParameters struct {
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
 	// (String) The name of the member entity.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.User
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.User
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("username",true)
 	// +kubebuilder:validation:Optional
 	UserName *string `json:"userName,omitempty" tf:"user_name,omitempty"`

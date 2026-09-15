@@ -19,7 +19,7 @@ type MemberGroupInitParameters struct {
 	GroupID *int64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
 	// (String) The name of the group member entity.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("group_name",true)
 	GroupName *string `json:"groupName,omitempty" tf:"group_name,omitempty"`
 
@@ -35,7 +35,7 @@ type MemberGroupInitParameters struct {
 	LdapGroupDn *string `json:"ldapGroupDn,omitempty" tf:"ldap_group_dn,omitempty"`
 
 	// (String) The project id of the project that the entity will have access to.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("id",true)
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
 
@@ -88,7 +88,7 @@ type MemberGroupParameters struct {
 	GroupID *int64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
 	// (String) The name of the group member entity.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("group_name",true)
 	// +kubebuilder:validation:Optional
 	GroupName *string `json:"groupName,omitempty" tf:"group_name,omitempty"`
@@ -106,7 +106,7 @@ type MemberGroupParameters struct {
 	LdapGroupDn *string `json:"ldapGroupDn,omitempty" tf:"ldap_group_dn,omitempty"`
 
 	// (String) The project id of the project that the entity will have access to.
-	// +crossplane:generate:reference:type=github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Project
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("id",true)
 	// +kubebuilder:validation:Optional
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`

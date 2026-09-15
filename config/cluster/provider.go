@@ -1,19 +1,19 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package cluster
 
 import (
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/config"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/garbage"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/harbor"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/immutable"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/interrogation"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/preheat"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/project"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/purge"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/retention"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster/robot"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/config"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/garbage"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/harbor"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/immutable"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/interrogation"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/preheat"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/project"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/purge"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/retention"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster/robot"
 )
 
 func init() {
