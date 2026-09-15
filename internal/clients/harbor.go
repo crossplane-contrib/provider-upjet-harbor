@@ -15,8 +15,8 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/terraform"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	clusterv1beta1 "github.com/jonasz-lasut/provider-upjet-harbor/apis/cluster/v1beta1"
-	namespacedv1beta1 "github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced/v1beta1"
+	clusterv1beta1 "github.com/crossplane-contrib/provider-upjet-harbor/apis/cluster/v1beta1"
+	namespacedv1beta1 "github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/v1beta1"
 )
 
 const (

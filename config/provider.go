@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package config
@@ -11,12 +11,12 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/cluster"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/cluster"
 )
 
 const (
 	resourcePrefix = "harbor"
-	modulePath     = "github.com/jonasz-lasut/provider-upjet-harbor"
+	modulePath     = "github.com/crossplane-contrib/provider-upjet-harbor"
 )
 
 //go:embed schema.json

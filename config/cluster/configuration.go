@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package cluster

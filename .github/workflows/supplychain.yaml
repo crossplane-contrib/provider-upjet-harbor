@@ -29,10 +29,10 @@ permissions:
 
 jobs:
   sign-artifacts:
-    runs-on: ubuntu-latest      
+    runs-on: ubuntu-24.04      
     env:
-      GHCR_IMAGE: ghcr.io/jonasz-lasut/provider-upjet-harbor
-      MIRROR_IMAGE: xpkg.upbound.io/jonasz-lasut/provider-upjet-harbor
+      GHCR_IMAGE: ghcr.io/crossplane-contrib/provider-upjet-harbor
+      MIRROR_IMAGE: xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor
       UP_VERSION: v0.51.1
     steps:
       - name: Checkout
@@ -109,7 +109,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_BODY=$(gh release view ${{ inputs.version }} --repo jonasz-lasut/provider-upjet-harbor --json body -q .body 2>/dev/null || true)
+          RELEASE_BODY=$(gh release view ${{ inputs.version }} --repo ${{ github.repository }} --json body -q .body 2>/dev/null || true)
           if [ -n "$RELEASE_BODY" ]; then
             echo "$RELEASE_BODY" >> "release_notes.md"
           fi
@@ -129,7 +129,7 @@ jobs:
             cp ./release_notes.md $extensions_dir/release-notes/
           fi
 
-          /tmp/up alpha xpkg append xpkg.upbound.io/jonasz-lasut/provider-upjet-harbor:${{ inputs.version }} --extensions-root $extensions_dir
+          /tmp/up alpha xpkg append xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor:${{ inputs.version }} --extensions-root $extensions_dir
 
       - name: Sign Upbound Mirror Image
         run: cosign sign --yes ${{ env.MIRROR_IMAGE }}:${{ github.event.inputs.version }}

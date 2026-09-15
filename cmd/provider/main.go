@@ -40,15 +40,15 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	apisCluster "github.com/jonasz-lasut/provider-upjet-harbor/apis/cluster"
-	apisNamespaced "github.com/jonasz-lasut/provider-upjet-harbor/apis/namespaced"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config"
-	resolverapis "github.com/jonasz-lasut/provider-upjet-harbor/internal/apis"
-	"github.com/jonasz-lasut/provider-upjet-harbor/internal/clients"
-	controllerCluster "github.com/jonasz-lasut/provider-upjet-harbor/internal/controller/cluster"
-	controllerNamespaced "github.com/jonasz-lasut/provider-upjet-harbor/internal/controller/namespaced"
-	"github.com/jonasz-lasut/provider-upjet-harbor/internal/features"
-	"github.com/jonasz-lasut/provider-upjet-harbor/internal/version"
+	apisCluster "github.com/crossplane-contrib/provider-upjet-harbor/apis/cluster"
+	apisNamespaced "github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config"
+	resolverapis "github.com/crossplane-contrib/provider-upjet-harbor/internal/apis"
+	"github.com/crossplane-contrib/provider-upjet-harbor/internal/clients"
+	controllerCluster "github.com/crossplane-contrib/provider-upjet-harbor/internal/controller/cluster"
+	controllerNamespaced "github.com/crossplane-contrib/provider-upjet-harbor/internal/controller/namespaced"
+	"github.com/crossplane-contrib/provider-upjet-harbor/internal/features"
+	"github.com/crossplane-contrib/provider-upjet-harbor/internal/version"
 )
 
 const (

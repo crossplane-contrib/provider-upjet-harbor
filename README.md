@@ -2,13 +2,15 @@
 
 <div style="text-align: center;">
 
-![CI](https://github.com/jonasz-lasut/provider-upjet-harbor/workflows/CI/badge.svg)
-[![GitHub release](https://img.shields.io/github/release/jonasz-lasut/provider-upjet-harbor/all.svg)](https://github.com/jonasz-lasut/provider-upjet-harbor/releases)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jonasz-lasut/provider-upjet-harbor)](https://goreportcard.com/report/github.com/jonasz-lasut/provider-upjet-harbor)
-[![Contributors](https://img.shields.io/github/contributors/jonasz-lasut/provider-upjet-harbor)](https://github.com/jonasz-lasut/provider-upjet-harbor/graphs/contributors)
+![CI](https://github.com/crossplane-contrib/provider-upjet-harbor/workflows/CI/badge.svg)
+[![GitHub release](https://img.shields.io/github/release/crossplane-contrib/provider-upjet-harbor/all.svg)](https://github.com/crossplane-contrib/provider-upjet-harbor/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/crossplane-contrib/provider-upjet-harbor)](https://goreportcard.com/report/github.com/crossplane-contrib/provider-upjet-harbor)
+[![Contributors](https://img.shields.io/github/contributors/crossplane-contrib/provider-upjet-harbor)](https://github.com/crossplane-contrib/provider-upjet-harbor/graphs/contributors)
 [![Slack](https://img.shields.io/badge/Slack-4A154B?logo=slack)](https://crossplane.slack.com)
 
 </div>
+
+> ⚠️ **DEPRECATION NOTICE**: xpkgs in the `jonasz-lasut` namespace are deprecated and will be removed in v1.4.0. Please migrate to the official `crossplane-contrib` namespace.
 
 Provider Upjet-Harbor is a [Crossplane](https://crossplane.io/) provider that
 is built using [Upjet](https://github.com/crossplane/upjet) code
@@ -21,7 +23,7 @@ Terraform provider.
 
 Install the provider into a Crossplane control plane. The provider package is
 published from this repository's CI on tag pushes; see
-[Releases](https://github.com/jonasz-lasut/provider-upjet-harbor/releases) for
+[Releases](https://github.com/crossplane-contrib/provider-upjet-harbor/releases) for
 the published image references.
 
 ```yaml
@@ -96,7 +98,7 @@ Harbor Terraform resource `harbor_<group>_<name>` is configured in the matching
 
 For filing bugs, suggesting improvements, or requesting new resources or features,
 please open an
-[issue](https://github.com/jonasz-lasut/provider-upjet-harbor/issues/new/choose).
+[issue](https://github.com/crossplane-contrib/provider-upjet-harbor/issues/new/choose).
 
 For general help with Crossplane and Upjet, the
 [Crossplane Slack](https://slack.crossplane.io) is the best place to ask.

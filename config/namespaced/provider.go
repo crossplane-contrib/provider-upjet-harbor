@@ -1,19 +1,19 @@
-// SPDX-FileCopyrightText: 2026 jonasz-lasut
+// SPDX-FileCopyrightText: 2026 crossplane-contrib
 // SPDX-License-Identifier: Apache-2.0
 
 package namespaced
 
 import (
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/config"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/garbage"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/harbor"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/immutable"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/interrogation"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/preheat"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/project"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/purge"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/retention"
-	"github.com/jonasz-lasut/provider-upjet-harbor/config/namespaced/robot"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/config"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/garbage"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/harbor"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/immutable"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/interrogation"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/preheat"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/project"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/purge"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/retention"
+	"github.com/crossplane-contrib/provider-upjet-harbor/config/namespaced/robot"
 )
 
 func init() {

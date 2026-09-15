@@ -40,7 +40,7 @@ jobs:
       go-version: ${{ github.event.inputs.go-version }}
       mirror: true
       cleanup-disk: true
-      registry_org: jonasz-lasut
+      registry_org: crossplane-contrib
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
       XPKG_MIRROR_TOKEN: ${{ secrets.XPKG_TOKEN }}

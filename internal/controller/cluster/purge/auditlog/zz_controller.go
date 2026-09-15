@@ -21,8 +21,8 @@ import (
 	"github.com/pkg/errors"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	v1alpha1 "github.com/jonasz-lasut/provider-upjet-harbor/apis/cluster/purge/v1alpha1"
-	features "github.com/jonasz-lasut/provider-upjet-harbor/internal/features"
+	v1alpha1 "github.com/crossplane-contrib/provider-upjet-harbor/apis/cluster/purge/v1alpha1"
+	features "github.com/crossplane-contrib/provider-upjet-harbor/internal/features"
 )
 
 // SetupWebhookWithManager registers the conversion webhook for AuditLog.
