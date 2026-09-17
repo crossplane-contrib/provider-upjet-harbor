@@ -55,9 +55,9 @@ KIND_VERSION = v0.33.0
 UPTEST_VERSION = v2.2.0
 CRDDIFF_VERSION = v0.12.1
 KUBECTL_VALIDATE_VERSION ?= v0.0.4
-CROSSPLANE_CLI_VERSION = v2.3.4
+CROSSPLANE_CLI_VERSION = v2.4.1
 # for e2e testing
-CROSSPLANE_VERSION = 2.3.4
+CROSSPLANE_VERSION = 2.4.1
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================
