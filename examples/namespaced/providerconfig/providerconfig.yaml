@@ -4,6 +4,7 @@ metadata:
   name: default
   namespace: crossplane-system
 spec:
+  url: http://harbor.harbor.svc.cluster.local
   credentials:
     source: Secret
     secretRef:

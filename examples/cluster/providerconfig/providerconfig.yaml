@@ -3,6 +3,7 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
+  url: http://harbor.harbor.svc.cluster.local
   credentials:
     source: Secret
     secretRef:

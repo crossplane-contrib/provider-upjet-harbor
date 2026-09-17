@@ -37,23 +37,46 @@ jobs:
         with:
           submodules: true
 
+      - name: Fetch base branch for PR
+        if: github.event_name == 'pull_request'
+        run: git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+
       - name: Get modified CRDs
         id: modified-crds
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
           files: |
             package/crds/**
+
       - name: Report breaking CRD OpenAPI v3 schema changes
         if: steps.modified-crds.outputs.any_changed == 'true'
         env:
           MODIFIED_CRD_LIST: ${{ steps.modified-crds.outputs.all_changed_files }}
         run: |
           make crddiff
+
       - name: Report native schema version changes
-        if: ${{ inputs.upjet-based-provider }}
         run: |
           make schema-version-diff
 
+  example-lint:
+    runs-on: ubuntu-latest
+    needs: detect-noop
+    if: ${{ needs.detect-noop.outputs.noop != 'true' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+
+      - name: Setup Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Lint Example Manifests
+        run: make example-lint
 
   lint:
     runs-on: ubuntu-24.04

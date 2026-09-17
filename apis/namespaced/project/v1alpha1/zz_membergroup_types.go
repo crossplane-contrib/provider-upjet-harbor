@@ -15,10 +15,11 @@ import (
 
 type MemberGroupInitParameters struct {
 
-	// (Number) The numeric identifier of the group type. Valid values are 1, 2, or 3 :
+	// (Number) Numeric id of an existing Harbor usergroup. When set, the
+	// provider skips the name/DN lookup entirely and attaches the member by id.
 	GroupID *int64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
-	// (String) The name of the group member entity.
+	// compat.
 	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("group_name",true)
 	GroupName *string `json:"groupName,omitempty" tf:"group_name,omitempty"`
@@ -31,7 +32,11 @@ type MemberGroupInitParameters struct {
 	// +kubebuilder:validation:Optional
 	GroupNameSelector *v2.NamespacedSelector `json:"groupNameSelector,omitempty" tf:"-"`
 
-	// (String) The distinguished name of the group within AD/LDAP.
+	// (String) Distinguished name of the LDAP group. Preferred
+	// input for type = "ldap". The provider resolves the DN against
+	// /usergroups, adopts an existing entry when present, and creates one when
+	// absent. The backing usergroup is never deleted on resource destroy, since it
+	// may be shared across projects.
 	LdapGroupDn *string `json:"ldapGroupDn,omitempty" tf:"ldap_group_dn,omitempty"`
 
 	// (String) The project id of the project that the entity will have access to.
@@ -50,25 +55,30 @@ type MemberGroupInitParameters struct {
 	// (String) The permissions that the entity will be granted.
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
-	// (String) The group type.  Can be set to "ldap", "internal" or "oidc".
+	// (String) The group type. Can be set to "ldap", "internal" or "oidc". Changing this forces a new resource.
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type MemberGroupObservation struct {
 
-	// (Number) The numeric identifier of the group type. Valid values are 1, 2, or 3 :
+	// (Number) Numeric id of an existing Harbor usergroup. When set, the
+	// provider skips the name/DN lookup entirely and attaches the member by id.
 	GroupID *int64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
-	// (String) The name of the group member entity.
+	// compat.
 	GroupName *string `json:"groupName,omitempty" tf:"group_name,omitempty"`
 
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// (String) The distinguished name of the group within AD/LDAP.
+	// (String) Distinguished name of the LDAP group. Preferred
+	// input for type = "ldap". The provider resolves the DN against
+	// /usergroups, adopts an existing entry when present, and creates one when
+	// absent. The backing usergroup is never deleted on resource destroy, since it
+	// may be shared across projects.
 	LdapGroupDn *string `json:"ldapGroupDn,omitempty" tf:"ldap_group_dn,omitempty"`
 
-	// (Number)
+	// (Number) Numeric id of the project member.
 	MemberID *int64 `json:"memberId,omitempty" tf:"member_id,omitempty"`
 
 	// (String) The project id of the project that the entity will have access to.
@@ -77,17 +87,18 @@ type MemberGroupObservation struct {
 	// (String) The permissions that the entity will be granted.
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
-	// (String) The group type.  Can be set to "ldap", "internal" or "oidc".
+	// (String) The group type. Can be set to "ldap", "internal" or "oidc". Changing this forces a new resource.
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }
 
 type MemberGroupParameters struct {
 
-	// (Number) The numeric identifier of the group type. Valid values are 1, 2, or 3 :
+	// (Number) Numeric id of an existing Harbor usergroup. When set, the
+	// provider skips the name/DN lookup entirely and attaches the member by id.
 	// +kubebuilder:validation:Optional
 	GroupID *int64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
-	// (String) The name of the group member entity.
+	// compat.
 	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Group
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("group_name",true)
 	// +kubebuilder:validation:Optional
@@ -101,7 +112,11 @@ type MemberGroupParameters struct {
 	// +kubebuilder:validation:Optional
 	GroupNameSelector *v2.NamespacedSelector `json:"groupNameSelector,omitempty" tf:"-"`
 
-	// (String) The distinguished name of the group within AD/LDAP.
+	// (String) Distinguished name of the LDAP group. Preferred
+	// input for type = "ldap". The provider resolves the DN against
+	// /usergroups, adopts an existing entry when present, and creates one when
+	// absent. The backing usergroup is never deleted on resource destroy, since it
+	// may be shared across projects.
 	// +kubebuilder:validation:Optional
 	LdapGroupDn *string `json:"ldapGroupDn,omitempty" tf:"ldap_group_dn,omitempty"`
 
@@ -123,7 +138,7 @@ type MemberGroupParameters struct {
 	// +kubebuilder:validation:Optional
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
 
-	// (String) The group type.  Can be set to "ldap", "internal" or "oidc".
+	// (String) The group type. Can be set to "ldap", "internal" or "oidc". Changing this forces a new resource.
 	// +kubebuilder:validation:Optional
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
 }

@@ -90,8 +90,8 @@ spec:
                       system or project.
                     type: string
                   name:
-                    description: (String) The name of the project that will be created
-                      in harbor.
+                    description: level robots with the project name. See full_name
+                      for the complete name.
                     type: string
                   permissions:
                     description: '(Block Set, Min: 1) (see below for nested schema)'
@@ -261,8 +261,8 @@ spec:
                       system or project.
                     type: string
                   name:
-                    description: (String) The name of the project that will be created
-                      in harbor.
+                    description: level robots with the project name. See full_name
+                      for the complete name.
                     type: string
                   permissions:
                     description: '(Block Set, Min: 1) (see below for nested schema)'
@@ -519,7 +519,8 @@ spec:
                     format: int64
                     type: integer
                   fullName:
-                    description: (String)
+                    description: (String) The full name of the robot account, this
+                      includes the appropriate prefix
                     type: string
                   id:
                     description: (String) The ID of this resource.
@@ -529,8 +530,8 @@ spec:
                       system or project.
                     type: string
                   name:
-                    description: (String) The name of the project that will be created
-                      in harbor.
+                    description: level robots with the project name. See full_name
+                      for the complete name.
                     type: string
                   permissions:
                     description: '(Block Set, Min: 1) (see below for nested schema)'

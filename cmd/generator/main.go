@@ -5,10 +5,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 
+	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 	"github.com/crossplane/upjet/v2/pkg/pipeline"
 	harborprovider "github.com/goharbor/terraform-provider-harbor/provider"
 
@@ -36,6 +39,25 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("cannot initialize the namespaced provider configuration: %v", err))
 	}
+	dumpGeneratedResourceList(pc, new("../config/generated.lst"))
 
 	pipeline.Run(pc, pns, absRootDir)
+}
+
+func dumpGeneratedResourceList(p *ujconfig.Provider, targetPath *string) {
+	if len(*targetPath) == 0 {
+		return
+	}
+	generatedResources := make([]string, 0, len(p.Resources))
+	for name := range p.Resources {
+		generatedResources = append(generatedResources, name)
+	}
+	sort.Strings(generatedResources)
+	buff, err := json.MarshalIndent(generatedResources, "", "")
+	if err != nil {
+		panic(fmt.Sprintf("Cannot marshal native schema versions to JSON: %s", err.Error()))
+	}
+	if err := os.WriteFile(*targetPath, buff, 0o600); err != nil {
+		panic(fmt.Sprintf("Cannot write native schema versions of generated resources to file %s: %s", *targetPath, err.Error()))
+	}
 }
