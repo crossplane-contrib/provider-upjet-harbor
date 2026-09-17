@@ -373,18 +373,36 @@ resources:
                     {
                       "name": "main"
                     }
+            - name: ldap_users
+              manifest: |-
+                {
+                  "ldap_group_dn": "cn=harbor_users,cn=groups,dc=example,dc=com",
+                  "project_id": "${harbor_project.main.id}",
+                  "role": "developer",
+                  "type": "ldap"
+                }
+              references:
+                project_id: harbor_project.main.id
         argumentDocs:
-            "1": = ldap
-            "2": = internal
-            "3": = oidc
-            group_id: '(Number) The numeric identifier of the group type. Valid values are 1, 2, or 3 :'
-            group_name: (String) The name of the group member entity.
+            group_id: |-
+                (Number) Numeric id of an existing Harbor usergroup. When set, the
+                provider skips the name/DN lookup entirely and attaches the member by id.
+            group_name: |-
+                (String) Name of the group member. For internal and oidc
+                types this is the identifying name. For ldap it is populated from the
+                backing usergroup after create/read and tracks whatever short name Harbor
+                returns; a distinguished name supplied here is accepted for back-compat.
             id: (String) The ID of this resource.
-            ldap_group_dn: (String) The distinguished name of the group within AD/LDAP.
-            member_id: (Number)
+            ldap_group_dn: |-
+                (String) Distinguished name of the LDAP group. Preferred
+                input for type = "ldap". The provider resolves the DN against
+                /usergroups, adopts an existing entry when present, and creates one when
+                absent. The backing usergroup is never deleted on resource destroy, since it
+                may be shared across projects.
+            member_id: (Number) Numeric id of the project member.
             project_id: (String) The project id of the project that the entity will have access to.
             role: (String) The permissions that the entity will be granted.
-            type: (String) The group type.  Can be set to "ldap", "internal" or "oidc".
+            type: (String) The group type. Can be set to "ldap", "internal" or "oidc". Changing this forces a new resource.
         importStatements:
             - terraform import harbor_project_member_group.main /projects/10/members/200
     harbor_project_member_user:
@@ -815,11 +833,11 @@ resources:
             disable: (Boolean) Disables the robot account when set to true.
             duration: (Number) By default, the robot account will not expire. Set it to the amount of days until the account should expire.
             effect: (String) Either allow or deny. Defaults to allow.
-            full_name: (String)
+            full_name: (String) The full name of the robot account, this includes the appropriate prefix
             id: (String) The ID of this resource.
             kind: (String) Either system or project.
             level: (String) Level of the robot account, currently either system or project.
-            name: (String) The name of the project that will be created in harbor.
+            name: '(String) The name of the robot account. Note that this is not the full robot account name : Harbor prefixes it with robot$ (by default) and for project-level robots with the project name. See full_name for the complete name.'
             namespace: (String) namespace is the name of your project. For kind system permissions, always use / as namespace. Use * to match all projects.
             permissions: '(Block Set, Min: 1) (see below for nested schema)'
             resource: (String) Eg. repository, labels, etc. Check available resources.
