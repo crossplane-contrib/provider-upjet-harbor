@@ -204,7 +204,7 @@ metadata:
 spec:
   forProvider:
     deleteUntagged: true
-    schedule: Daily
+    schedule: weekly
     workers: 1
 
 ---

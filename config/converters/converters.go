@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"path"
 	"strconv"
+	"strings"
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -129,4 +130,18 @@ func (c intFieldAsString) Convert(params map[string]any, _ *ujconfig.Resource, m
 	}
 
 	return params, nil
+}
+
+// SuppressCaseInsensitiveDiff makes the named Terraform string attribute
+// compare case-insensitively, for attributes Harbor normalises on read (for
+// example a schedule "weekly" that is read back as "Weekly"). It is
+// idempotent, so it is safe to call once per scope on a shared provider.
+func SuppressCaseInsensitiveDiff(r *ujconfig.Resource, field string) {
+	s, ok := r.TerraformResource.Schema[field]
+	if !ok {
+		return
+	}
+	s.DiffSuppressFunc = func(_, oldValue, newValue string, _ *schema.ResourceData) bool {
+		return strings.EqualFold(oldValue, newValue)
+	}
 }
