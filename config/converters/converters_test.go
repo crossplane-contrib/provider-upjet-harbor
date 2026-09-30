@@ -7,6 +7,8 @@ import (
 	"context"
 	"testing"
 
+	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
+	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -45,5 +47,32 @@ func TestWrapReadDeriveStringID_SharedResourceDualScope(t *testing.T) {
 	}
 	if got, want := d.Get("registry_id"), "42"; got != want {
 		t.Fatalf("registry_id = %q, want %q", got, want)
+	}
+}
+
+func TestSuppressCaseInsensitiveDiff(t *testing.T) {
+	type args struct {
+		field    string
+		old, new string
+	}
+	cases := map[string]struct {
+		args args
+		want bool
+	}{
+		"LowercaseVersusCapitalised": {args: args{field: "schedule", old: "Weekly", new: "weekly"}, want: true},
+		"Identical":                  {args: args{field: "schedule", old: "Daily", new: "Daily"}, want: true},
+		"DifferentValues":            {args: args{field: "schedule", old: "Weekly", new: "daily"}, want: false},
+	}
+	for name, tc := range cases {
+		t.Run(name, func(t *testing.T) {
+			r := &ujconfig.Resource{TerraformResource: &schema.Resource{
+				Schema: map[string]*schema.Schema{"schedule": {Type: schema.TypeString, Optional: true}},
+			}}
+			SuppressCaseInsensitiveDiff(r, tc.args.field)
+			got := r.TerraformResource.Schema[tc.args.field].DiffSuppressFunc("", tc.args.old, tc.args.new, nil)
+			if diff := cmp.Diff(tc.want, got); diff != "" {
+				t.Errorf("DiffSuppressFunc(...): -want, +got:\n%s", diff)
+			}
+		})
 	}
 }

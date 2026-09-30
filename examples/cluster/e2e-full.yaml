@@ -204,7 +204,7 @@ metadata:
 spec:
   forProvider:
     deleteUntagged: true
-    schedule: Daily
+    schedule: weekly
     workers: 1
 
 ---
@@ -221,7 +221,7 @@ spec:
     auditRetentionHour: 24
     includeOperations: create,pull
     includeEventTypes: pull_artifact
-    schedule: Daily
+    schedule: daily
 
 ---
 apiVersion: interrogation.harbor.crossplane.io/v1alpha1
@@ -235,7 +235,7 @@ metadata:
 spec:
   forProvider:
     defaultScanner: Clair
-    vulnerabilityScanPolicy: Daily
+    vulnerabilityScanPolicy: daily
 
 ---
 apiVersion: preheat.harbor.crossplane.io/v1alpha1
@@ -291,7 +291,7 @@ spec:
     - nDaysSinceLastPush: 10
       repoMatching: '**'
       tagMatching: '{latest,snapshot}'
-    schedule: Daily
+    schedule: daily
     scopeSelector:
       matchLabels:
         testing.upbound.io/example-name: main
