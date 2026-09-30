@@ -12,6 +12,7 @@ require (
 	github.com/crossplane/crossplane/apis/v2 v2.4.0
 	github.com/crossplane/upjet/v2 v2.4.1-0.20260803122152-324a879f3eed
 	github.com/goharbor/terraform-provider-harbor v1.4.1-0.20260914074238-b8e507d64d5f
+	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
 	github.com/pkg/errors v0.9.1
 	google.golang.org/grpc v1.83.2
@@ -65,7 +66,6 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
-	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/go-cty v1.5.0 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect

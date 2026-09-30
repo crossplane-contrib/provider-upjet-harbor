@@ -9,4 +9,4 @@ metadata:
 spec:
   forProvider:
     defaultScanner: Clair
-    vulnerabilityScanPolicy: Daily
+    vulnerabilityScanPolicy: daily

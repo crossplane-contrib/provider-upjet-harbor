@@ -11,4 +11,4 @@ spec:
     auditRetentionHour: 24
     includeOperations: create,pull
     includeEventTypes: pull_artifact
-    schedule: Daily
+    schedule: daily

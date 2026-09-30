@@ -16,7 +16,7 @@ spec:
     - nDaysSinceLastPush: 10
       repoMatching: '**'
       tagMatching: '{latest,snapshot}'
-    schedule: Daily
+    schedule: daily
     scopeSelector:
       matchLabels:
         testing.upbound.io/example-name: main
