@@ -29,7 +29,7 @@ permissions:
 
 jobs:
   sign-artifacts:
-    runs-on: ubuntu-24.04      
+    runs-on: ubuntu-26.04      
     env:
       GHCR_IMAGE: ghcr.io/crossplane-contrib/provider-upjet-harbor
       MIRROR_IMAGE: xpkg.upbound.io/crossplane-contrib/provider-upjet-harbor
