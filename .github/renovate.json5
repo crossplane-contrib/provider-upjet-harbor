@@ -69,16 +69,6 @@
       "extractVersionTemplate": "^(?<version>.*)$"
     },
     {
-      // We want a PR to bump up CLI versions used through env variables in
-      // any Github Actions, taking it from the official Github repository releases.
-      "customType": "regex",
-      "description": "Bump up CLI version in workflows",
-      "managerFilePatterns": ["/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"],
-      "matchStrings": ["UP_VERSION: ['\"]?(?<currentValue>v[^'\"\\s]+)['\"]?"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "upbound/up"
-    },
-    {
       // We want a PR to bump uptest versions used through make variables in
       // the Makefile, taking it from the official Github repository releases.
       "customType": "regex",
@@ -119,17 +109,6 @@
       "matchStrings": ["CROSSPLANE_CLI_VERSION \\??= (?<currentValue>.*?)\\n"],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "crossplane/cli"
-    },
-    {
-      // We want a PR to bump crddiff versions used through make variables in
-      // the Makefile, taking it from the upbound/uptest repository tags (not
-      // every crddiff tag has a Github release).
-      "customType": "regex",
-      "description": "Bump crddiff version in the Makefile",
-      "managerFilePatterns": ["/^Makefile$/"],
-      "matchStrings": ["CRDDIFF_VERSION \\??= (?<currentValue>.*?)\\n"],
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "upbound/uptest"
     },
     {
       // We want a PR to bump kubectl-validate versions used through make variables in
