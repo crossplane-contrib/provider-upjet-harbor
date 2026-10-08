@@ -14,6 +14,50 @@ import (
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// ResolveReferences of this Project.
+func (mg *Project) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPINamespacedResolver(c, mg)
+
+	var rsp reference.NamespacedResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromIntPtrValue(mg.Spec.ForProvider.RegistryID),
+		Extract:      resource.ExtractParamPath("registry_id", true),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.ForProvider.RegistryIDRef,
+		Selector:     mg.Spec.ForProvider.RegistryIDSelector,
+		To: reference.To{
+			List:    &RegistryList{},
+			Managed: &Registry{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.RegistryID")
+	}
+	mg.Spec.ForProvider.RegistryID = reference.ToIntPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.RegistryIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromIntPtrValue(mg.Spec.InitProvider.RegistryID),
+		Extract:      resource.ExtractParamPath("registry_id", true),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.InitProvider.RegistryIDRef,
+		Selector:     mg.Spec.InitProvider.RegistryIDSelector,
+		To: reference.To{
+			List:    &RegistryList{},
+			Managed: &Registry{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.RegistryID")
+	}
+	mg.Spec.InitProvider.RegistryID = reference.ToIntPtrValue(rsp.ResolvedValue)
+	mg.Spec.InitProvider.RegistryIDRef = rsp.ResolvedReference
+
+	return nil
+}
+
 // ResolveReferences of this Replication.
 func (mg *Replication) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPINamespacedResolver(c, mg)
