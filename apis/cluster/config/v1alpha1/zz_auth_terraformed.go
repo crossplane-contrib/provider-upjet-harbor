@@ -21,7 +21,7 @@ func (mg *Auth) GetTerraformResourceType() string {
 
 // GetConnectionDetailsMapping for this Auth
 func (tr *Auth) GetConnectionDetailsMapping() map[string]string {
-	return map[string]string{"ldap_search_password": "ldapSearchPasswordSecretRef", "oidc_client_secret": "oidcClientSecretSecretRef"}
+	return map[string]string{"ldap_search_password": "ldapSearchPasswordSecretRef", "oidc_client_secret": "oidcClientSecretSecretRef", "oidc_client_secret_wo": "status.atProvider.oidcClientSecretWo"}
 }
 
 // GetObservation of this Auth
