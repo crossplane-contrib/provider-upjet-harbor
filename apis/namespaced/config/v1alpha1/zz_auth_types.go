@@ -162,6 +162,9 @@ type AuthObservation struct {
 	// (String) The client id for the oidc server.
 	OidcClientID *string `json:"oidcClientId,omitempty" tf:"oidc_client_id,omitempty"`
 
+	// only OIDC client secret updates. Must be used together with oidc_client_secret_wo.
+	OidcClientSecretWoVersion *int64 `json:"oidcClientSecretWoVersion,omitempty" tf:"oidc_client_secret_wo_version,omitempty"`
+
 	// complaint server.
 	OidcEndpoint *string `json:"oidcEndpoint,omitempty" tf:"oidc_endpoint,omitempty"`
 
