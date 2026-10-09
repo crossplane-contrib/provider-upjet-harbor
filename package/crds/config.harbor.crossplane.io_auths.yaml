@@ -528,6 +528,11 @@ spec:
                   oidcClientId:
                     description: (String) The client id for the oidc server.
                     type: string
+                  oidcClientSecretWoVersion:
+                    description: only OIDC client secret updates. Must be used together
+                      with oidc_client_secret_wo.
+                    format: int64
+                    type: integer
                   oidcEndpoint:
                     description: complaint server.
                     type: string

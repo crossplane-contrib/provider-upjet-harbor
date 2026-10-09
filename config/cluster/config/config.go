@@ -11,10 +11,17 @@ import (
 // (config_auth, config_security, config_system).
 func Configure(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("harbor_config_auth", func(r *ujconfig.Resource) {
-		// Write-only secret fields have no Terraform-managed state to read
-		// back, so they cannot be represented as a Crossplane resource
-		// field; drop them from generation entirely.
-		delete(r.TerraformResource.Schema, "oidc_client_secret_wo")
-		delete(r.TerraformResource.Schema, "oidc_client_secret_wo_version")
+		// _wo fields stay in the runtime schema: upstream Create and
+		// Update fails with the following error if they're not present
+		// "async create failed: failed to create the resource: [{0 error retrieving
+		// write-only argument \"oidc_client_secret_wo\": [{0 Invalid config path The Terraform
+		// Provider unexpectedly provided a path that does not match the current schema.
+		// This can happen if the path does not correctly follow the schema in structure
+		// or types. Please report this to the provider developers. \n\nCannot find config
+		// value for given path. [{{} oidc_client_secret_wo}]}]  []}]"
+		r.TerraformResource.Schema["oidc_client_secret_wo"].Sensitive = true
+		r.TerraformResource.Schema["oidc_client_secret_wo"].RequiredWith = nil
+		r.TerraformResource.Schema["oidc_client_secret_wo_version"].RequiredWith = nil
+		ujconfig.MoveToStatus(r.TerraformResource, "oidc_client_secret_wo", "oidc_client_secret_wo_version")
 	})
 }

@@ -330,6 +330,11 @@ func (in *AuthObservation) DeepCopyInto(out *AuthObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.OidcClientSecretWoVersion != nil {
+		in, out := &in.OidcClientSecretWoVersion, &out.OidcClientSecretWoVersion
+		*out = new(int64)
+		**out = **in
+	}
 	if in.OidcEndpoint != nil {
 		in, out := &in.OidcEndpoint, &out.OidcEndpoint
 		*out = new(string)
