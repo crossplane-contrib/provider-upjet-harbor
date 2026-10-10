@@ -640,6 +640,16 @@ func (in *ProjectInitParameters) DeepCopyInto(out *ProjectInitParameters) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.RegistryIDRef != nil {
+		in, out := &in.RegistryIDRef, &out.RegistryIDRef
+		*out = new(v2.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.RegistryIDSelector != nil {
+		in, out := &in.RegistryIDSelector, &out.RegistryIDSelector
+		*out = new(v2.Selector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.StorageQuota != nil {
 		in, out := &in.StorageQuota, &out.StorageQuota
 		*out = new(int64)
@@ -863,6 +873,16 @@ func (in *ProjectParameters) DeepCopyInto(out *ProjectParameters) {
 		in, out := &in.RegistryID, &out.RegistryID
 		*out = new(int64)
 		**out = **in
+	}
+	if in.RegistryIDRef != nil {
+		in, out := &in.RegistryIDRef, &out.RegistryIDRef
+		*out = new(v2.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.RegistryIDSelector != nil {
+		in, out := &in.RegistryIDSelector, &out.RegistryIDSelector
+		*out = new(v2.Selector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.StorageQuota != nil {
 		in, out := &in.StorageQuota, &out.StorageQuota

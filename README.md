@@ -47,6 +47,41 @@ see the upstream [Upjet generating-a-provider guide](https://github.com/crosspla
 For information about monitoring the Upjet runtime, see the
 [Upjet Monitoring Guide](https://github.com/crossplane/upjet/blob/main/docs/monitoring.md).
 
+### Proxy-cache project registry references
+
+Projects support `registryIdRef` and `registryIdSelector` under both
+`spec.forProvider` and `spec.initProvider`, for cluster-scoped and namespaced
+resources. To bind a proxy-cache project to a specific Registry, use its
+Kubernetes resource name:
+
+```yaml
+spec:
+  forProvider:
+    name: dockerhub
+    registryIdRef:
+      name: docker-hub
+```
+
+Alternatively, select a Registry using a label that uniquely identifies it:
+
+```yaml
+spec:
+  forProvider:
+    name: dockerhub
+    registryIdSelector:
+      matchLabels:
+        registry: dockerhub
+```
+
+The provider resolves the Registry's `status.atProvider.registryId` into the
+Project's numeric `registryId`. Namespaced references and selectors default to
+the Project's namespace. Required references wait for the Registry and its
+observed ID to become available. Setting `registryId` directly remains supported.
+
+Complete examples with a Registry and proxy-cache Projects using both references
+and selectors are available for [cluster-scoped](examples/cluster/harbor/v1alpha1/project-registry.yaml)
+and [namespaced](examples/namespaced/harbor/v1alpha1/project-registry.yaml) resources.
+
 ## Supply Chain Security
 
 Released images are signed and attested (SBOM, SLSA provenance) via keyless
