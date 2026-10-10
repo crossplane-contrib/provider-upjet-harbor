@@ -78,6 +78,10 @@ Project's numeric `registryId`. Namespaced references and selectors default to
 the Project's namespace. Required references wait for the Registry and its
 observed ID to become available. Setting `registryId` directly remains supported.
 
+Complete examples with a Registry and proxy-cache Projects using both references
+and selectors are available for [cluster-scoped](examples/cluster/harbor/v1alpha1/project-registry.yaml)
+and [namespaced](examples/namespaced/harbor/v1alpha1/project-registry.yaml) resources.
+
 ## Supply Chain Security
 
 Released images are signed and attested (SBOM, SLSA provenance) via keyless

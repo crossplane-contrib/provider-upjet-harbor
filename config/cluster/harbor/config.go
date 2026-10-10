@@ -35,12 +35,17 @@ func Configure(p *ujconfig.Provider) {
 	// registryId as a *string (its schema *is* overridden). The generated
 	// resolver is hand-patched to use FromIntPtrValue/ToIntPtrValue since
 	// angryjet only emits string/float pointer helpers for *int64 fields.
-	for _, name := range []string{"harbor_project", "harbor_replication"} {
-		p.AddResourceConfigurator(name, func(r *ujconfig.Resource) {
-			r.References["registry_id"] = ujconfig.Reference{
-				TerraformName: "harbor_registry",
-				Extractor:     `github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)`,
-			}
-		})
-	}
+	p.AddResourceConfigurator("harbor_project", func(r *ujconfig.Resource) {
+		r.References["registry_id"] = ujconfig.Reference{
+			TerraformName: "harbor_registry",
+			Extractor:     `github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)`,
+		}
+	})
+
+	p.AddResourceConfigurator("harbor_replication", func(r *ujconfig.Resource) {
+		r.References["registry_id"] = ujconfig.Reference{
+			TerraformName: "harbor_registry",
+			Extractor:     `github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)`,
+		}
+	})
 }
