@@ -1,0 +1,49 @@
+# Requires a ProviderConfig named "default".
+apiVersion: harbor.crossplane.io/v1alpha1
+kind: Registry
+metadata:
+  annotations:
+    meta.upbound.io/example-id: harbor/v1alpha1/project-registry
+  labels:
+    testing.upbound.io/example-name: project-registry
+  name: project-registry
+spec:
+  forProvider:
+    endpointUrl: https://hub.docker.com
+    name: project-registry
+    providerName: docker-hub
+
+---
+
+apiVersion: harbor.crossplane.io/v1alpha1
+kind: Project
+metadata:
+  annotations:
+    meta.upbound.io/example-id: harbor/v1alpha1/project-registry
+  labels:
+    testing.upbound.io/example-name: proxy-cache-ref
+  name: proxy-cache-ref
+spec:
+  forProvider:
+    name: proxy-cache-ref
+    public: false
+    registryIdRef:
+      name: project-registry
+
+---
+
+apiVersion: harbor.crossplane.io/v1alpha1
+kind: Project
+metadata:
+  annotations:
+    meta.upbound.io/example-id: harbor/v1alpha1/project-registry
+  labels:
+    testing.upbound.io/example-name: proxy-cache-selector
+  name: proxy-cache-selector
+spec:
+  forProvider:
+    name: proxy-cache-selector
+    public: false
+    registryIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: project-registry

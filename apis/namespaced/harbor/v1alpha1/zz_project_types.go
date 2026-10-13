@@ -46,7 +46,17 @@ type ProjectInitParameters struct {
 	Public *bool `json:"public,omitempty" tf:"public,omitempty"`
 
 	// (Number) To enable project as Proxy Cache.
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Registry
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)
 	RegistryID *int64 `json:"registryId,omitempty" tf:"registry_id,omitempty"`
+
+	// Reference to a Registry in harbor to populate registryId.
+	// +kubebuilder:validation:Optional
+	RegistryIDRef *v2.NamespacedReference `json:"registryIdRef,omitempty" tf:"-"`
+
+	// Selector for a Registry in harbor to populate registryId.
+	// +kubebuilder:validation:Optional
+	RegistryIDSelector *v2.NamespacedSelector `json:"registryIdSelector,omitempty" tf:"-"`
 
 	// (Number) The storage quota of the project in GB's.
 	StorageQuota *int64 `json:"storageQuota,omitempty" tf:"storage_quota,omitempty"`
@@ -152,8 +162,18 @@ type ProjectParameters struct {
 	Public *bool `json:"public,omitempty" tf:"public,omitempty"`
 
 	// (Number) To enable project as Proxy Cache.
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-upjet-harbor/apis/namespaced/harbor/v1alpha1.Registry
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)
 	// +kubebuilder:validation:Optional
 	RegistryID *int64 `json:"registryId,omitempty" tf:"registry_id,omitempty"`
+
+	// Reference to a Registry in harbor to populate registryId.
+	// +kubebuilder:validation:Optional
+	RegistryIDRef *v2.NamespacedReference `json:"registryIdRef,omitempty" tf:"-"`
+
+	// Selector for a Registry in harbor to populate registryId.
+	// +kubebuilder:validation:Optional
+	RegistryIDSelector *v2.NamespacedSelector `json:"registryIdSelector,omitempty" tf:"-"`
 
 	// (Number) The storage quota of the project in GB's.
 	// +kubebuilder:validation:Optional
