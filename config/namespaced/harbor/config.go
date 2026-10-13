@@ -27,7 +27,7 @@ func Configure(p *ujconfig.Provider) {
 		converters.WrapReadDeriveStringID(r.TerraformResource, "registry_id")
 	})
 
-	// harbor_replication: leave the registry_id schema untouched (TypeInt). The
+	// Project and Replication: leave the registry_id schema untouched (TypeInt). The
 	// upstream Create/Update code asserts d.Get("registry_id").(int), and upjet's
 	// HCL pre-processor would panic if the schema were flipped to TypeString
 	// while our ToTerraform conversion produced an int64. The reference still
@@ -35,6 +35,13 @@ func Configure(p *ujconfig.Provider) {
 	// registryId as a *string (its schema *is* overridden). The generated
 	// resolver is hand-patched to use FromIntPtrValue/ToIntPtrValue since
 	// angryjet only emits string/float pointer helpers for *int64 fields.
+	p.AddResourceConfigurator("harbor_project", func(r *ujconfig.Resource) {
+		r.References["registry_id"] = ujconfig.Reference{
+			TerraformName: "harbor_registry",
+			Extractor:     `github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("registry_id",true)`,
+		}
+	})
+
 	p.AddResourceConfigurator("harbor_replication", func(r *ujconfig.Resource) {
 		r.References["registry_id"] = ujconfig.Reference{
 			TerraformName: "harbor_registry",
