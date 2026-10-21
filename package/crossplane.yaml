@@ -5,3 +5,4 @@ metadata:
 spec:
   capabilities:
     - SafeStart
+    - DiffServer
