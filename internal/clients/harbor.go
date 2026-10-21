@@ -21,12 +21,17 @@ import (
 
 const (
 	// error messages
-	errNoProviderConfig     = "no providerConfigRef provided"
-	errGetProviderConfig    = "cannot get referenced ProviderConfig"
-	errTrackUsage           = "cannot track ProviderConfig usage"
-	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal harbor credentials as JSON"
-	errNoCredentials        = "no harbor credentials provided (need username+password or bearer_token)"
+	errNoProviderConfig      = "no providerConfigRef provided"
+	errGetProviderConfig     = "cannot get referenced ProviderConfig"
+	errTrackUsage            = "cannot track ProviderConfig usage"
+	errExtractCredentials    = "cannot extract credentials"
+	errUnmarshalCredentials  = "cannot unmarshal harbor credentials as JSON"
+	errNoCredentials         = "no harbor credentials provided (need username+password or bearer_token)"
+	errResolveProviderConfig = "cannot resolve provider config"
+
+	// defaultAPIVersion is the Harbor REST API version a ProviderConfig that
+	// sets none is configured with, matching the Terraform provider's default.
+	defaultAPIVersion = 2
 )
 
 // buildHarborSetup translates a parsed ProviderConfig + raw credentials
@@ -40,16 +45,8 @@ func buildHarborSetup(cfg namespacedv1beta1.ProviderConfigSpec, credsData []byte
 		return ps, errors.Wrap(err, errUnmarshalCredentials)
 	}
 
-	ps.Configuration = map[string]any{
-		"url":      ptr.Deref(cfg.URL, ""),
-		"insecure": ptr.Deref(cfg.Insecure, false),
-	}
-	if cfg.APIVersion != nil {
-		ps.Configuration["api_version"] = *cfg.APIVersion
-	}
-	if robotPrefix := ptr.Deref(cfg.RobotPrefix, ""); robotPrefix != "" {
-		ps.Configuration["robot_prefix"] = robotPrefix
-	}
+	insecure := ptr.Deref(cfg.Insecure, false)
+	ps.Configuration = harborConfiguration(cfg, insecure)
 
 	switch {
 	case creds["bearer_token"] != "":
@@ -61,20 +58,42 @@ func buildHarborSetup(cfg namespacedv1beta1.ProviderConfigSpec, credsData []byte
 		return ps, errors.New(errNoCredentials)
 	}
 
-	// Mirrors providerConfigure in terraform-provider-harbor: the configured
-	// *client.Client is what Terraform resource CRUD functions receive as meta.
+	ps.Meta = newHarborClient(cfg, creds["username"], creds["password"], creds["bearer_token"], insecure)
+	return ps, nil
+}
+
+// harborConfiguration translates the credential-free part of a ProviderConfig
+// into the Terraform provider configuration. The online and the offline setups
+// share it and differ only in the credentials they add to it.
+func harborConfiguration(cfg namespacedv1beta1.ProviderConfigSpec, insecure bool) map[string]any {
+	c := map[string]any{
+		"url":      ptr.Deref(cfg.URL, ""),
+		"insecure": insecure,
+	}
+	if cfg.APIVersion != nil {
+		c["api_version"] = *cfg.APIVersion
+	}
+	if robotPrefix := ptr.Deref(cfg.RobotPrefix, ""); robotPrefix != "" {
+		c["robot_prefix"] = robotPrefix
+	}
+	return c
+}
+
+// newHarborClient mirrors providerConfigure in terraform-provider-harbor: the
+// configured *client.Client is what Terraform resource functions receive as
+// their meta argument.
+func newHarborClient(cfg namespacedv1beta1.ProviderConfigSpec, username, password, bearerToken string, insecure bool) *harborclient.Client {
 	baseURL := strings.TrimRight(ptr.Deref(cfg.URL, ""), "/")
-	ps.Meta = harborclient.NewClient(
-		baseURL+harborAPIPath(ptr.Deref(cfg.APIVersion, 2)),
-		creds["username"],
-		creds["password"],
+	return harborclient.NewClient(
+		baseURL+harborAPIPath(ptr.Deref(cfg.APIVersion, defaultAPIVersion)),
+		username,
+		password,
 		"",
-		creds["bearer_token"],
-		ptr.Deref(cfg.Insecure, false),
+		bearerToken,
+		insecure,
 		ptr.Deref(cfg.RobotPrefix, ""),
 		nil,
 	)
-	return ps, nil
 }
 
 // harborAPIPath mirrors the path logic in terraform-provider-harbor's
@@ -101,7 +120,7 @@ func TerraformSetupBuilder(_ *schema.Provider) terraform.SetupFn {
 
 		pcSpec, err := resolveProviderConfig(ctx, c, mg)
 		if err != nil {
-			return ps, errors.Wrap(err, "cannot resolve provider config")
+			return ps, errors.Wrap(err, errResolveProviderConfig)
 		}
 
 		data, err := resource.CommonCredentialExtractor(ctx, pcSpec.Credentials.Source, c, pcSpec.Credentials.CommonCredentialSelectors)
@@ -172,8 +191,16 @@ func resolveModern(ctx context.Context, crClient client.Client, mg resource.Mode
 		return nil, errors.New("referenced kind is not a client.Object")
 	}
 
-	// Namespace will be ignored if the PC is a cluster-scoped type
-	if err := crClient.Get(ctx, types.NamespacedName{Name: configRef.Name, Namespace: mg.GetNamespace()}, pcObj); err != nil {
+	// A real API server's RESTMapper-aware client ignores the namespace given
+	// for a cluster-scoped kind. The diff server's in-memory client does not:
+	// it keys its store on an exact namespace match and holds a
+	// ClusterProviderConfig under the empty namespace, so the namespace has to
+	// be cleared here rather than left to the client.
+	ns := mg.GetNamespace()
+	if configRef.Kind == namespacedv1beta1.ClusterProviderConfigKind {
+		ns = ""
+	}
+	if err := crClient.Get(ctx, types.NamespacedName{Name: configRef.Name, Namespace: ns}, pcObj); err != nil {
 		return nil, errors.Wrap(err, errGetProviderConfig)
 	}
 

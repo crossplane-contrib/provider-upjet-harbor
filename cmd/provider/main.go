@@ -18,10 +18,13 @@ import (
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/customresourcesgate"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/statemetrics"
+	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 	tjcontroller "github.com/crossplane/upjet/v2/pkg/controller"
 	"github.com/crossplane/upjet/v2/pkg/controller/conversion"
+	"github.com/crossplane/upjet/v2/pkg/diffserver"
 	"github.com/crossplane/upjet/v2/pkg/terraform"
 	harborprovider "github.com/goharbor/terraform-provider-harbor/provider"
+	tfschema "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	authv1 "k8s.io/api/authorization/v1"
@@ -58,7 +61,7 @@ const (
 	tlsServerCertDir        = "/tls/server"
 )
 
-//nolint:gocyclo // The enable-secret-cache branch below is the standard crossplane-runtime v2.4.0 wiring, copy-pasted as-is rather than extracted into a helper.
+//nolint:gocyclo // main dispatches the provider's commands and wires the standard crossplane-runtime manager setup; it is easier to follow as a unit than split into helpers.
 func main() {
 	var (
 		app                     = kingpin.New(filepath.Base(os.Args[0]), "Terraform based Crossplane provider for Harbor").DefaultEnvars()
@@ -85,9 +88,19 @@ func main() {
 			certsDirSet = true
 			return nil
 		}).String()
+
+		// Running the provider's controllers is the default command, so that
+		// the provider keeps behaving as it did before the internal commands
+		// were introduced, i.e. when it is invoked without any arguments.
+		startCmd = app.Command("start", "Start the provider's controllers.").Default()
+
+		internalCmd   = app.Command("internal", "Commands used internally by the Crossplane ecosystem. No compatibility guarantees are made for them.")
+		diffServerCmd = internalCmd.Command("diff-server", "Start a gRPC server serving the provider's diff services. It never contacts Harbor or a cluster: plans are computed offline from the resources in each request.")
+		diffNetwork   = diffServerCmd.Flag("network", "The network the diff gRPC server listens on.").Default("tcp").Envar("DIFF_SERVER_NETWORK").Enum("tcp", "unix")
+		diffAddress   = diffServerCmd.Flag("address", "The address the diff gRPC server listens on. A socket path when the network is unix.").Default(":9099").Envar("DIFF_SERVER_ADDRESS").String()
 	)
 
-	kingpin.MustParse(app.Parse(os.Args[1:]))
+	cmd := kingpin.MustParse(app.Parse(os.Args[1:]))
 
 	zl := zap.New(zap.UseDevMode(*debug))
 	log := logging.NewLogrLogger(zl.WithName("provider-upjet-harbor"))
@@ -96,6 +109,26 @@ func main() {
 		// *very* verbose even at info level, so we only provide it a real
 		// logger when we're running in debug mode.
 		ctrl.SetLogger(zl)
+	}
+
+	ctx := context.Background()
+	sdkProvider := harborprovider.Provider()
+
+	clusterProvider, err := config.GetProvider(ctx, sdkProvider)
+	kingpin.FatalIfError(err, "Cannot initialize the cluster-scoped provider configuration")
+	namespacedProvider, err := config.GetProviderNamespaced(ctx, sdkProvider)
+	kingpin.FatalIfError(err, "Cannot initialize the namespaced provider configuration")
+
+	switch cmd {
+	case diffServerCmd.FullCommand():
+		// Dispatched before a cluster connection (ctrl.GetConfig and the
+		// manager below) becomes a requirement for running this binary at
+		// all: the diff server serves from the resources in each request and
+		// never talks to a cluster or to Harbor.
+		kingpin.FatalIfError(serveDiffServer(ctrl.SetupSignalHandler(), log, *diffNetwork, *diffAddress, sdkProvider, clusterProvider, namespacedProvider), "Cannot run the diff gRPC server")
+		return
+	case startCmd.FullCommand():
+		// The provider's controllers are started below.
 	}
 
 	// Currently the jitter is 5% of the poll interval (matches azuread).
@@ -163,14 +196,6 @@ func main() {
 
 	metrics.Registry.MustRegister(metricRecorder)
 	metrics.Registry.MustRegister(stateMetrics)
-
-	ctx := context.Background()
-	sdkProvider := harborprovider.Provider()
-
-	clusterProvider, err := config.GetProvider(ctx, sdkProvider)
-	kingpin.FatalIfError(err, "Cannot initialize the cluster-scoped provider configuration")
-	namespacedProvider, err := config.GetProviderNamespaced(ctx, sdkProvider)
-	kingpin.FatalIfError(err, "Cannot initialize the namespaced provider configuration")
 
 	clusterOpts := tjcontroller.Options{
 		Options: xpcontroller.Options{
@@ -314,4 +339,37 @@ func canWatchCRD(ctx context.Context, mgr manager.Manager) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+// serveDiffServer runs the diff gRPC server on the given network and address
+// until ctx is done.
+func serveDiffServer(ctx context.Context, log logging.Logger, network, address string, sdkProvider *tfschema.Provider, providers ...*ujconfig.Provider) error {
+	s, scheme, err := newDiffServer(log, sdkProvider, providers...)
+	if err != nil {
+		return err
+	}
+	return s.Serve(ctx, network, address, scheme)
+}
+
+// newDiffServer returns the diff gRPC server, wired to compute plans offline,
+// and the runtime scheme it decodes plan requests with. The scheme holds the
+// provider's own APIs and the Kubernetes core API, which is all a request can
+// carry: the server never talks to a cluster.
+func newDiffServer(log logging.Logger, sdkProvider *tfschema.Provider, providers ...*ujconfig.Provider) (*diffserver.Server, *runtime.Scheme, error) {
+	scheme := runtime.NewScheme()
+	if err := corev1.AddToScheme(scheme); err != nil {
+		return nil, nil, errors.Wrap(err, "cannot add Kubernetes core APIs to the diff server scheme")
+	}
+	if err := apisCluster.AddToScheme(scheme); err != nil {
+		return nil, nil, errors.Wrap(err, "cannot add cluster-scoped Harbor APIs to the diff server scheme")
+	}
+	if err := apisNamespaced.AddToScheme(scheme); err != nil {
+		return nil, nil, errors.Wrap(err, "cannot add namespaced Harbor APIs to the diff server scheme")
+	}
+	s := diffserver.NewServer(
+		diffserver.WithProviderConfigurations(providers...),
+		diffserver.WithLogger(log),
+		diffserver.WithTerraformSetupFn(clients.OfflineTerraformSetupBuilder(sdkProvider)),
+	)
+	return s, scheme, nil
 }
