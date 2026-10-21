@@ -172,8 +172,16 @@ func resolveModern(ctx context.Context, crClient client.Client, mg resource.Mode
 		return nil, errors.New("referenced kind is not a client.Object")
 	}
 
-	// Namespace will be ignored if the PC is a cluster-scoped type
-	if err := crClient.Get(ctx, types.NamespacedName{Name: configRef.Name, Namespace: mg.GetNamespace()}, pcObj); err != nil {
+	// A real API server's RESTMapper-aware client ignores the namespace given
+	// for a cluster-scoped kind. The diff server's in-memory client does not:
+	// it keys its store on an exact namespace match and holds a
+	// ClusterProviderConfig under the empty namespace, so the namespace has to
+	// be cleared here rather than left to the client.
+	ns := mg.GetNamespace()
+	if configRef.Kind == namespacedv1beta1.ClusterProviderConfigKind {
+		ns = ""
+	}
+	if err := crClient.Get(ctx, types.NamespacedName{Name: configRef.Name, Namespace: ns}, pcObj); err != nil {
 		return nil, errors.Wrap(err, errGetProviderConfig)
 	}
 
