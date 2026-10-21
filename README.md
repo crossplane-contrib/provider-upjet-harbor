@@ -10,7 +10,8 @@
 
 </div>
 
-> ⚠️ **DEPRECATION NOTICE**: xpkgs in the `jonasz-lasut` namespace are deprecated and will be removed in v1.4.0. Please migrate to the official `crossplane-contrib` namespace.
+> [!CAUTION]
+> **xpkgs in the `jonasz-lasut` namespace were deleted as of the v1.4.0 release.** Please migrate to the official `crossplane-contrib` namespace.
 
 Provider Upjet-Harbor is a [Crossplane](https://crossplane.io/) provider that
 is built using [Upjet](https://github.com/crossplane/upjet) code
