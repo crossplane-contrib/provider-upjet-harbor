@@ -10,7 +10,7 @@ require (
 	github.com/crossplane/crossplane-runtime/v2 v2.5.0-rc.0
 	github.com/crossplane/crossplane-tools v0.0.0-20260719180100-659f1dc036c5
 	github.com/crossplane/crossplane/apis/v2 v2.4.2
-	github.com/crossplane/upjet/v2 v2.5.1-0.20261020144946-71d99c50eea3
+	github.com/crossplane/upjet/v2 v2.5.1
 	github.com/goharbor/terraform-provider-harbor v1.4.1-0.20260914074238-b8e507d64d5f
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
