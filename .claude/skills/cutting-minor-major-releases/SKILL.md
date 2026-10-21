@@ -14,11 +14,9 @@ published package, and signed/attested artifacts. Unlike a CVE security patch
 straight from `main` HEAD, and the version bump (minor vs major) is chosen by
 the user, never inferred.
 
-The repo keeps exactly **one** `release-X.Y` branch at a time: the latest
-minor/major line, because CVE remediations only ever target that line. Cutting
-a new line therefore ends by retiring the superseded branch (step 11). Patch
-releases never retire anything — `release-1.2` survives `v1.2.1` and dies only
-when `v1.3.0` (or `v2.0.0`) ships.
+Older `release-X.Y` branches are **never deleted**: the repo lives in
+`crossplane-contrib`, where release branches are kept so previous lines stay
+patchable. Cutting a new line leaves every existing `release-*` branch in place.
 
 ## When to use
 
@@ -89,9 +87,7 @@ pushing over it.
 ### 4. Confirm before anything externally visible
 
 Show the user `NEW_VERSION`, `NEW_BRANCH`, a summary of what's shipping
-(e.g. `git log --oneline "$TAG"..main`), and the existing `release-*`
-branches that step 11 will delete once the release completes
-(`git ls-remote --heads origin 'release-*'`). From here on every step is
+(e.g. `git log --oneline "$TAG"..main`). From here on every step is
 externally visible (pushed branch, public tag, GitHub release, published
 package) and isn't something you can quietly undo — get explicit
 confirmation before continuing.
@@ -147,29 +143,9 @@ needs the tag from step 6 to exist, step 9 needs the image step 8 published.
 Find each run with `gh run list --workflow="<name>" --limit 1` and wait on it
 (`gh run watch <run-id> --exit-status`); if using the Monitor tool, its
 until-loop pattern is the sanctioned way to poll rather than a manual sleep
-loop. Only once all three have concluded successfully, move on to branch
-retirement.
-
-### 11. Retire superseded release branches — then report
-
-Only the latest `release-X.Y` branch may remain in the repo: CVE
-remediations (`remediating-cves`) only ever target the newest release line,
-so once `NEW_VERSION` is fully released the older branches are dead weight —
-their history is preserved by the `vX.Y.Z` tags, so nothing is lost. Delete
-every remote `release-*` branch except `NEW_BRANCH`:
-
-```bash
-git ls-remote --heads origin 'release-*' | sed 's|.*refs/heads/||' \
-  | grep -vx "$NEW_BRANCH" \
-  | while read -r OLD; do git push origin --delete "$OLD"; done
-```
-
-Run this **only after** steps 6–9 have all concluded successfully — if the
-release dies partway, the previous line must stay patchable. (Stale local
-copies are harmless; clean them up with `git branch -D` if present.)
-
-Then report the new version released, the branch it lives on, and which
-superseded release branches were deleted.
+loop. Only once all three have concluded successfully, report the new version
+released and the branch it lives on. Do not delete any older `release-*`
+branch.
 
 ## Quick reference
 
@@ -180,7 +156,6 @@ superseded release branches were deleted.
 | (n/a) `gh release create` | — | tag name, `--target` branch |
 | `Publish Provider Package` | the new tag (`vX.Y.0` / `vX.0.0`) | `version` |
 | `Supply Chain and Xpkg Extensions` | `main` | `version` |
-| Retire old branches | — | delete every `release-*` except the new one |
 
 ## Common mistakes
 
@@ -202,10 +177,5 @@ superseded release branches were deleted.
   — the tag or image it depends on won't exist yet.
 - Using this skill for a patch bump (`vX.Y.Z+1`) — that path belongs to
   `remediating-cves`, which reuses an existing branch instead of cutting one.
-- Leaving the superseded `release-X.Y` branch behind after the new line
-  ships — the repo holds exactly one release branch, the latest.
-- Deleting the old branch before steps 6–9 have all succeeded — a
-  half-finished release leaves no patchable line if the old branch is gone.
-- Retiring a release branch after a *patch* release — patches ride the
-  existing branch; retirement only happens when a new minor/major line
-  supersedes it.
+- Deleting superseded `release-X.Y` branches after the new line ships — in
+  `crossplane-contrib` they are kept so older lines stay patchable.
