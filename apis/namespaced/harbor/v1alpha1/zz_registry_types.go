@@ -16,7 +16,7 @@ import (
 type RegistryInitParameters struct {
 
 	// (String) The username / access ID for the external container register.
-	AccessID *string `json:"accessId,omitempty" tf:"access_id,omitempty"`
+	AccessIDSecretRef *v2.LocalSecretKeySelector `json:"accessIdSecretRef,omitempty" tf:"-"`
 
 	// (String, Sensitive) The password / access key / token for the external container register.
 	AccessSecretSecretRef *v2.LocalSecretKeySelector `json:"accessSecretSecretRef,omitempty" tf:"-"`
@@ -42,9 +42,6 @@ type RegistryInitParameters struct {
 }
 
 type RegistryObservation struct {
-
-	// (String) The username / access ID for the external container register.
-	AccessID *string `json:"accessId,omitempty" tf:"access_id,omitempty"`
 
 	// encoded CA certificate trusting the registry custom-signed certificate.
 	// (ignored in <2.15.0)
@@ -79,7 +76,7 @@ type RegistryParameters struct {
 
 	// (String) The username / access ID for the external container register.
 	// +kubebuilder:validation:Optional
-	AccessID *string `json:"accessId,omitempty" tf:"access_id,omitempty"`
+	AccessIDSecretRef *v2.LocalSecretKeySelector `json:"accessIdSecretRef,omitempty" tf:"-"`
 
 	// (String, Sensitive) The password / access key / token for the external container register.
 	// +kubebuilder:validation:Optional
