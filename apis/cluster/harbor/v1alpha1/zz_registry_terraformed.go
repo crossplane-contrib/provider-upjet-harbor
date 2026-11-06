@@ -21,7 +21,7 @@ func (mg *Registry) GetTerraformResourceType() string {
 
 // GetConnectionDetailsMapping for this Registry
 func (tr *Registry) GetConnectionDetailsMapping() map[string]string {
-	return map[string]string{"access_secret": "accessSecretSecretRef"}
+	return map[string]string{"access_id": "accessIdSecretRef", "access_secret": "accessSecretSecretRef"}
 }
 
 // GetObservation of this Registry

@@ -58,10 +58,19 @@ spec:
             properties:
               forProvider:
                 properties:
-                  accessId:
+                  accessIdSecretRef:
                     description: (String) The username / access ID for the external
                       container register.
-                    type: string
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    type: object
                   accessSecretSecretRef:
                     description: (String, Sensitive) The password / access key / token
                       for the external container register.
@@ -112,10 +121,19 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  accessId:
+                  accessIdSecretRef:
                     description: (String) The username / access ID for the external
                       container register.
-                    type: string
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    type: object
                   accessSecretSecretRef:
                     description: (String, Sensitive) The password / access key / token
                       for the external container register.
@@ -229,10 +247,6 @@ spec:
             properties:
               atProvider:
                 properties:
-                  accessId:
-                    description: (String) The username / access ID for the external
-                      container register.
-                    type: string
                   caCertificate:
                     description: |-
                       encoded CA certificate trusting the registry custom-signed certificate.

@@ -15,6 +15,7 @@ func Configure(p *ujconfig.Provider) {
 	// harbor_registry: override registry_id from int to string so the CRD
 	// field is *string and ExtractParamPath returns a usable value.
 	p.AddResourceConfigurator("harbor_registry", func(r *ujconfig.Resource) {
+		r.TerraformResource.Schema["access_id"].Sensitive = true
 		converters.OverrideIntFieldAsString(r, "registry_id")
 		r.TerraformConversions = append(r.TerraformConversions, converters.IntFieldAsString("registry_id"))
 
